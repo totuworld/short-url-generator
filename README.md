@@ -11,3 +11,16 @@ express.js, firebase를 이용해서 단축 url을 반환하는 서비스를 만
 
 ## 추가 기능
 * open graph 태그에 사용할 이미지나 title을 넣을 수 있으면 좋겠다.
+
+
+## 실행 전 준비사항
+* .env 파일을 만들어야함.
+
+```
+projectId=firebase project id
+privateKey=firebase privete key
+clientEmail=firebae client email
+PORT=4949
+HOST=localhost
+PROTOCOL=http
+```
