@@ -11,7 +11,7 @@ const ID_LENGTH = 5;
 
 async function create(targetUrl: string) {
   const col = FirebaseAdmin.instance.Firestore.collection(COLLECTION);
-  let id = nanoid(ID_LENGTH);
+  const idArr = [nanoid(ID_LENGTH), nanoid(ID_LENGTH), nanoid(ID_LENGTH)];
   const docId = await FirebaseAdmin.instance.Firestore.runTransaction(
     async (transaction) => {
       async function createData(targetId: string) {
@@ -21,22 +21,23 @@ async function create(targetUrl: string) {
           createAt: FieldValue.serverTimestamp(),
         });
       }
-      const doc = await transaction.get(col.doc(id));
+      const doc = await transaction.get(col.doc(idArr[0]));
+      const doc2nd = await transaction.get(col.doc(idArr[1]));
+      const doc3rd = await transaction.get(col.doc(idArr[2]));
       if (doc.exists === false) {
+        const id = idArr[0];
         await createData(id);
         return id;
       }
-      id = nanoid(ID_LENGTH);
-      const doc2nd = await transaction.get(col.doc(id));
       if (doc2nd.exists === false) {
+        const id = idArr[1];
         await createData(id);
         return id;
       }
-      id = nanoid(ID_LENGTH);
-      const doc3rd = await transaction.get(col.doc(id));
       if (doc3rd.exists === true) {
         throw new CreateError("지속적으로 중복 id가 생성되고 있습니다.");
       }
+      const id = idArr[2];
       await createData(id);
       return id;
     }
